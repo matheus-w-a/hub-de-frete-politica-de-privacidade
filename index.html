@@ -43,6 +43,22 @@
       li {
         margin-bottom: 5px;
       }
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+        font-size: 0.95rem;
+      }
+      th,
+      td {
+        text-align: left;
+        padding: 8px 10px;
+        border: 1px solid #e5e7eb;
+        vertical-align: top;
+      }
+      th {
+        background-color: #f3f4f6;
+      }
       .footer {
         margin-top: 50px;
         font-size: 0.875rem;
@@ -63,119 +79,345 @@
   <body>
     <div class="container">
       <h1>Política de Privacidade</h1>
-      <p><strong>Última atualização:</strong> 18 de Janeiro de 2026</p>
+      <p><strong>Última atualização:</strong> 29 de Abril de 2026</p>
 
       <p>
         Esta Política de Privacidade descreve como o aplicativo
-        <strong>Hub de Frete no Checkout</strong> ("o App") coleta, usa e divulga informações
-        suas e de seus clientes ao utilizar nosso serviço através da plataforma
-        Shopify.
+        <strong>Hub de Frete no Checkout</strong> ("o App", "nós") coleta, usa,
+        armazena e divulga informações de lojistas e dos consumidores finais
+        atendidos pelos lojistas, ao operar através da plataforma Shopify. Esta
+        política observa a Lei Geral de Proteção de Dados (LGPD - Lei
+        13.709/2018) e o General Data Protection Regulation (GDPR).
       </p>
 
-      <h2>1. Coleta de Informações</h2>
+      <h2>1. Papéis e responsabilidades</h2>
       <p>
-        Para o funcionamento adequado dos serviços de cálculo de frete e
-        rastreamento, o App acessa os seguintes tipos de dados:
+        Em relação aos dados de consumidores finais (compradores das lojas), o
+        <strong>lojista é o controlador</strong> dos dados pessoais e o Hub de
+        Frete atua como <strong>operador</strong>, processando os dados sob
+        instruções do lojista exclusivamente para as finalidades descritas nesta
+        política. Em relação aos dados do próprio lojista (e-mail, credenciais
+        de transportadoras, configurações da loja), o Hub de Frete atua como
+        controlador.
       </p>
+
+      <h2>2. Dados coletados</h2>
+      <p>
+        O App processa apenas o conjunto mínimo de dados necessário para
+        viabilizar suas funcionalidades, conforme princípio da minimização (LGPD
+        Art. 6º, III).
+      </p>
+
+      <h3 style="margin-top: 20px; font-size: 1.05rem">
+        2.1. Dados do lojista
+      </h3>
       <ul>
+        <li>E-mail e domínio da loja (provenientes da sessão Shopify).</li>
         <li>
-          <strong>Dados do Lojista:</strong> Nome, e-mail, endereço da loja e
-          credenciais de acesso às transportadoras configuradas (como usuário e senha dos Correios,
-          tokens de API da JadLog e Melhor Envio e outras), armazenados de forma segura.
+          Credenciais de integração com transportadoras configuradas pelo
+          próprio lojista (ex.: usuário e senha Correios, tokens de API JadLog,
+          Melhor Envio, Loggi e Total Express, parâmetros de tabelas de frete).
+          Credenciais sensíveis são criptografadas em repouso.
         </li>
         <li>
-          <strong>Dados do Cliente Final (Comprador):</strong> Endereço de
-          entrega (CEP, cidade, estado) necessário para o cálculo do frete.
+          Plano de assinatura ativo (Básico, Plus, Ultra) e data de atualização.
         </li>
         <li>
-          <strong>Dados do Pedido:</strong> Itens do carrinho (peso, dimensões,
-          valor) e status do pedido para monitoramento de entrega.
+          Configurações de regras de frete, dimensões padrão de embalagem e CEP
+          de origem.
         </li>
       </ul>
 
-      <h2>2. Como Usamos as Informações</h2>
-      <p>As informações coletadas são utilizadas estritamente para:</p>
+      <h3 style="margin-top: 20px; font-size: 1.05rem">
+        2.2. Dados do consumidor final (comprador)
+      </h3>
+      <p>
+        <strong>Durante o cálculo de frete</strong> (no checkout, página de
+        produto ou carrinho):
+      </p>
+      <ul>
+        <li>CEP de destino digitado pelo comprador.</li>
+        <li>
+          Características do pacote (peso, dimensões e valor declarado do
+          carrinho).
+        </li>
+      </ul>
+      <p>
+        <strong>Durante a captura de remessas</strong> (via webhook
+        <code>fulfillments/create</code> da Shopify, quando o lojista cria um
+        envio):
+      </p>
+      <ul>
+        <li>Identificadores Shopify do pedido e da remessa.</li>
+        <li>Número de rastreio e nome da transportadora.</li>
+        <li>
+          Sigla do estado (UF) de destino (ex.: "SP"), extraída do payload para
+          fins de analytics agregada por região.
+        </li>
+        <li>
+          Valor do frete pago, consultado via Admin GraphQL API
+          (<code>order.shippingLine</code>) usando o ID do pedido.
+        </li>
+        <li>Data de criação da remessa.</li>
+      </ul>
+
+      <p>
+        <strong>O App NÃO coleta nem armazena</strong> os seguintes dados do
+        consumidor final, mesmo quando presentes no payload da Shopify:
+      </p>
+      <ul>
+        <li>Nome completo</li>
+        <li>E-mail</li>
+        <li>Telefone</li>
+        <li>Endereço (linha 1, linha 2, CEP completo do destinatário)</li>
+        <li>CPF ou outros documentos de identificação</li>
+        <li>Geolocalização precisa</li>
+      </ul>
+      <p>
+        Esses campos são ignorados por design no momento da validação do
+        payload, em conformidade com o princípio da minimização da LGPD e com os
+        requisitos de Protected Customer Data da Shopify.
+      </p>
+
+      <h2>3. Finalidades de uso</h2>
+      <p>Os dados coletados são utilizados estritamente para:</p>
       <ul>
         <li>
           Calcular preços e prazos de entrega em tempo real através das APIs das
-          transportadoras parceiras (Correios, JadLog, Melhor Envio e outras).
+          transportadoras parceiras.
         </li>
-        <li>Processar atualizações de rastreamento de encomendas.</li>
         <li>
-          Permitir que o lojista configure regras de frete personalizadas e
-          escolha quais transportadoras utilizar.
+          Aplicar regras de frete personalizadas configuradas pelo lojista
+          (descontos, frete grátis, prazos adicionais por região, etc.).
         </li>
-        <li>Melhorar e otimizar o desempenho do App.</li>
+        <li>
+          Capturar e armazenar remessas para fornecer ao lojista um painel de
+          rastreamento de pedidos em trânsito e analytics operacional agregada
+          por estado e por transportadora.
+        </li>
+        <li>
+          Permitir que o consumidor consulte o status do próprio pedido na
+          página de rastreio integrada à loja.
+        </li>
+        <li>Operar e melhorar o desempenho do App.</li>
       </ul>
 
-      <h2>3. Compartilhamento de Informações</h2>
+      <h2>4. Compartilhamento de dados</h2>
       <p>
-        Para realizar o cálculo de frete, alguns dados são compartilhados com
-        as transportadoras parceiras configuradas pelo lojista:
+        Os dados são compartilhados apenas com as transportadoras configuradas
+        pelo próprio lojista, e exclusivamente os campos necessários para a
+        cotação ou rastreamento:
       </p>
       <ul>
         <li>
-          <strong
-            >Correios (Empresa Brasileira de Correios e Telégrafos):</strong
-          >
-          Quando configurado, enviamos o CEP de origem, CEP de destino e características do pacote
-          (peso/dimensões) para obter a cotação. Nenhuma informação pessoal
-          identificável do comprador (como nome ou CPF) é enviada aos Correios
-          nesta etapa de cotação.
+          <strong>Correios:</strong> CEP de origem, CEP de destino, peso e
+          dimensões do pacote.
         </li>
         <li>
-          <strong>JadLog:</strong>
-          Quando configurado, enviamos o CEP de origem, CEP de destino e características do pacote
-          (peso/dimensões) para obter a cotação. Nenhuma informação pessoal
-          identificável do comprador é compartilhada.
+          <strong>JadLog:</strong> CEP de origem, CEP de destino, peso e
+          dimensões do pacote.
         </li>
         <li>
-          <strong>Melhor Envio:</strong>
-          Quando configurado, enviamos o CEP de origem, CEP de destino e características do pacote
-          (peso/dimensões) para obter cotações das transportadoras disponíveis na plataforma.
-          Nenhuma informação pessoal identificável do comprador é compartilhada.
+          <strong>Loggi:</strong> CEP de origem, CEP de destino, peso e
+          dimensões do pacote.
+        </li>
+        <li>
+          <strong>Melhor Envio:</strong> CEP de origem, CEP de destino, peso e
+          dimensões do pacote (para obter cotações das transportadoras
+          disponíveis na plataforma).
+        </li>
+        <li>
+          <strong>Total Express:</strong> CEP de origem, CEP de destino, peso e
+          dimensões do pacote.
         </li>
       </ul>
       <p>
-        <strong>Importante:</strong> Apenas as transportadoras configuradas pelo lojista
-        receberão dados para cálculo de frete. Não vendemos, alugamos ou divulgamos seus dados
-        pessoais ou de seus clientes para terceiros para fins de marketing.
+        Em nenhum momento são compartilhados nome, e-mail, telefone, endereço
+        completo ou CPF do consumidor com transportadoras durante a cotação.
       </p>
-
-      <h2>4. Segurança dos Dados</h2>
       <p>
-        Levamos a segurança a sério. Todas as credenciais das transportadoras
-        (tokens de API, usuários e senhas) são criptografadas antes de serem armazenadas.
-        Utilizamos protocolos HTTPS para toda a comunicação entre a Shopify, nossos servidores (AWS)
-        e as transportadoras parceiras.
+        <strong>Importante:</strong> não vendemos, alugamos ou divulgamos dados
+        pessoais do lojista ou de seus clientes para terceiros para finalidades
+        de marketing, publicidade ou enriquecimento de bases.
       </p>
 
-      <h2>5. Seus Direitos</h2>
+      <h2>5. Sub-processadores</h2>
       <p>
-        Como lojista, você tem o direito de acessar, corrigir ou excluir as
-        informações pessoais que armazenamos. Ao desinstalar o App, os dados de
-        configuração e credenciais associados à sua loja são removidos de nossos
-        sistemas conforme os prazos estabelecidos pela GDPR e LGPD.
+        Para operar o serviço, contratamos os seguintes sub-processadores, com
+        os quais mantemos acordos de tratamento de dados (DPA):
+      </p>
+      <table>
+        <thead>
+          <tr>
+            <th>Sub-processador</th>
+            <th>Finalidade</th>
+            <th>Localização</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Amazon Web Services (AWS)</td>
+            <td>
+              Banco de dados (DynamoDB), armazenamento de tabelas de frete (S3),
+              agendamento de tarefas (EventBridge Scheduler) e processamento
+              serverless (Lambda).
+            </td>
+            <td>us-east-2 (Ohio, EUA)</td>
+          </tr>
+          <tr>
+            <td>Render</td>
+            <td>Hospedagem da aplicação web e endpoints de API/webhooks.</td>
+            <td>EUA</td>
+          </tr>
+          <tr>
+            <td>Shopify</td>
+            <td>
+              Plataforma de origem dos dados; recebimento de webhooks e
+              consultas Admin API.
+            </td>
+            <td>Global (conforme Shopify)</td>
+          </tr>
+          <tr>
+            <td>Transportadoras parceiras</td>
+            <td>
+              Cotação e rastreamento conforme integrações ativadas pelo lojista
+              (Correios, JadLog, Loggi, Melhor Envio, Total Express).
+            </td>
+            <td>Brasil</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2>6. Transferência internacional</h2>
+      <p>
+        Os dados são armazenados em servidores AWS na região
+        <code>us-east-2</code> (Ohio, Estados Unidos). A transferência
+        internacional para os EUA observa as salvaguardas previstas no Art. 33
+        da LGPD por meio das cláusulas contratuais e DPA assinados com a AWS,
+        considerados adequados pela ANPD para transferências transfronteiriças.
       </p>
 
-      <h2>6. Alterações nesta Política</h2>
+      <h2>7. Retenção e exclusão</h2>
+      <ul>
+        <li>
+          <strong>Remessas (shipments):</strong> retenção máxima de 12 meses a
+          partir da criação. Após esse período, os registros são automaticamente
+          excluídos via processo de retention purge.
+        </li>
+        <li>
+          <strong>Configurações e credenciais do lojista:</strong> mantidas
+          enquanto o App estiver instalado. Removidas em até 30 dias após
+          desinstalação.
+        </li>
+        <li>
+          <strong>Sessões Shopify:</strong> mantidas enquanto válidas; renovadas
+          conforme protocolo OAuth.
+        </li>
+        <li>
+          <strong
+            >Solicitações de redação (Shopify Compliance Webhooks):</strong
+          >
+          atendemos as solicitações de
+          <code>customers/data_request</code>, <code>customers/redact</code> e
+          <code>shop/redact</code> emitidas pela Shopify, conforme prazos e
+          procedimentos definidos pela plataforma.
+        </li>
+      </ul>
+
+      <h2>8. Segurança</h2>
+      <p>Aplicamos os seguintes controles técnicos e organizacionais:</p>
+      <ul>
+        <li>
+          <strong>Criptografia em repouso:</strong> dados armazenados em
+          DynamoDB e S3 são criptografados via chaves gerenciadas pela AWS
+          (AWS-managed KMS).
+        </li>
+        <li>
+          <strong>Criptografia em trânsito:</strong> toda comunicação entre
+          Shopify, nossos servidores, AWS e APIs de transportadoras utiliza TLS
+          1.2 ou superior.
+        </li>
+        <li>
+          <strong>Credenciais de transportadoras:</strong> tokens, usuários e
+          senhas são criptografados antes do armazenamento; nunca aparecem em
+          logs.
+        </li>
+        <li>
+          <strong>Logs:</strong> sistema de logging com lista de campos
+          permitidos (allow-list) que impede o registro acidental de payloads
+          brutos, headers ou identificadores pessoais.
+        </li>
+        <li>
+          <strong>Controle de acesso:</strong> acesso administrativo às bases
+          AWS é restrito a pessoal autorizado, com autenticação multifatorial.
+        </li>
+        <li>
+          <strong>Separação de ambientes:</strong> ambientes de desenvolvimento,
+          teste e produção são isolados.
+        </li>
+      </ul>
+
+      <h2>9. Direitos do titular dos dados</h2>
+      <p>
+        Sob a LGPD (Art. 18) e o GDPR, o titular dos dados pessoais pode exercer
+        os seguintes direitos: confirmação de tratamento, acesso, correção,
+        anonimização ou eliminação, portabilidade, informação sobre
+        compartilhamentos, revogação de consentimento e oposição.
+      </p>
+      <p>
+        <strong>Para o lojista:</strong> as solicitações podem ser feitas
+        diretamente ao Encarregado de Dados (ver Seção 11) ou através do e-mail
+        de suporte do App.
+      </p>
+      <p>
+        <strong>Para o consumidor final:</strong> como o lojista é o controlador
+        dos dados do consumidor, as solicitações devem ser encaminhadas primeiro
+        ao próprio lojista. Mediante instrução do lojista (ou via Shopify
+        Compliance Webhook), o Hub de Frete executa a operação solicitada (ex.:
+        exclusão dos registros de remessa relacionados).
+      </p>
+
+      <h2>10. Decisões automatizadas</h2>
+      <p>
+        O App não realiza tratamento automatizado de dados pessoais com efeitos
+        jurídicos relevantes ao titular (ex.: profiling, scoring de crédito,
+        decisões de contratação). O cálculo de frete é uma operação
+        determinística baseada em parâmetros públicos (CEP, peso, dimensões) e
+        não toma decisões com impacto legal sobre o consumidor.
+      </p>
+
+      <h2>11. Encarregado de dados (DPO)</h2>
+      <p>
+        Em conformidade com o Art. 41 da LGPD, designamos um Encarregado de
+        Dados disponível para receber solicitações de titulares e comunicações
+        da ANPD.
+      </p>
+      <p>
+        <strong>Encarregado:</strong> Matheus de Andrade<br />
+        <strong>E-mail:</strong>
+        <a href="mailto:contact@csatech.com.br">contact@csatech.com.br</a>
+      </p>
+
+      <h2>12. Alterações nesta política</h2>
       <p>
         Podemos atualizar esta Política de Privacidade periodicamente para
-        refletir, por exemplo, mudanças em nossas práticas ou por outras razões
-        operacionais, legais ou regulatórias.
+        refletir mudanças em nossas práticas, requisitos da Shopify ou razões
+        legais e regulatórias. A data de última atualização está sempre no topo
+        deste documento. Mudanças materiais serão comunicadas aos lojistas
+        instalados.
       </p>
 
-      <h2>7. Contato</h2>
+      <h2>13. Contato</h2>
       <p>
-        Para mais informações sobre nossas práticas de privacidade, ou se tiver
-        dúvidas, entre em contato conosco através do e-mail de suporte listado
-        na página do aplicativo na Shopify App Store.
+        Para dúvidas sobre esta política, exercício de direitos ou outras
+        questões de privacidade, entre em contato pelo e-mail de suporte listado
+        na página do aplicativo na Shopify App Store ou pelo e-mail do
+        Encarregado de Dados informado na Seção 11.
       </p>
 
       <div class="footer">
         <p>
-          &copy; 2025 Hub de Frete no Checkout. Todos os direitos
-          reservados.
+          &copy; 2026 Hub de Frete no Checkout. Todos os direitos reservados.
         </p>
       </div>
     </div>
