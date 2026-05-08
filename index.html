@@ -79,7 +79,10 @@
   <body>
     <div class="container">
       <h1>Política de Privacidade</h1>
-      <p><strong>Última atualização:</strong> 29 de Abril de 2026</p>
+      <p>
+        <strong>Versão:</strong> 1.1<br />
+        <strong>Última atualização:</strong> 7 de Maio de 2026
+      </p>
 
       <p>
         Esta Política de Privacidade descreve como o aplicativo
@@ -159,6 +162,31 @@
           (<code>order.shippingLine</code>) usando o ID do pedido.
         </li>
         <li>Data de criação da remessa.</li>
+      </ul>
+
+      <p>
+        <strong>Durante o monitoramento contínuo da remessa</strong>, enquanto o
+        envio estiver em trânsito e dentro do período de retenção, o App
+        consulta periodicamente a transportadora e armazena os eventos de
+        rastreio retornados:
+      </p>
+      <ul>
+        <li>
+          Status logístico (ex.: "postado", "em trânsito", "saiu para entrega",
+          "entregue", "devolvido").
+        </li>
+        <li>
+          Data e hora de cada evento, conforme informado pela transportadora.
+        </li>
+        <li>
+          Localização aproximada do evento (cidade/UF) quando fornecida pela
+          transportadora; não armazenamos endereços completos nem coordenadas
+          geográficas.
+        </li>
+        <li>
+          Mensagens descritivas do evento, exatamente como retornadas pela
+          transportadora.
+        </li>
       </ul>
 
       <p>
@@ -300,18 +328,22 @@
       <h2>7. Retenção e exclusão</h2>
       <ul>
         <li>
-          <strong>Remessas (shipments):</strong> retenção máxima de 12 meses a
-          partir da criação. Após esse período, os registros são automaticamente
-          excluídos via processo de retention purge.
+          <strong>Remessas (shipments) e eventos de rastreio:</strong> retenção
+          máxima de 12 meses (365 dias) a partir da data de criação da remessa,
+          implementada via atributo TTL nativo do DynamoDB. Após esse período,
+          os registros são automaticamente excluídos por processo de retention
+          purge executado periodicamente.
         </li>
         <li>
           <strong>Configurações e credenciais do lojista:</strong> mantidas
-          enquanto o App estiver instalado. Removidas em até 30 dias após
-          desinstalação.
+          enquanto o App estiver instalado. Após a desinstalação, são removidas
+          mediante o recebimento do webhook <code>shop/redact</code> emitido
+          pela Shopify, conforme o ciclo padrão da plataforma (em regra, 48
+          horas após a desinstalação).
         </li>
         <li>
           <strong>Sessões Shopify:</strong> mantidas enquanto válidas; renovadas
-          conforme protocolo OAuth.
+          conforme protocolo OAuth e invalidadas na desinstalação.
         </li>
         <li>
           <strong
@@ -319,7 +351,8 @@
           >
           atendemos as solicitações de
           <code>customers/data_request</code>, <code>customers/redact</code> e
-          <code>shop/redact</code> emitidas pela Shopify, conforme prazos e
+          <code>shop/redact</code> emitidas pela Shopify, encaminhadas ao nosso
+          pipeline de processamento via AWS EventBridge, conforme prazos e
           procedimentos definidos pela plataforma.
         </li>
       </ul>
@@ -357,6 +390,17 @@
         </li>
       </ul>
 
+      <h3>8.1. Cookies e armazenamento local</h3>
+      <p>
+        O App não utiliza cookies próprios para rastreamento, analytics ou
+        publicidade. A autenticação no painel administrativo é gerenciada pela
+        própria Shopify através do protocolo OAuth, com sessões armazenadas no
+        servidor (DynamoDB) e não em cookies de navegador controlados pelo App.
+        Os blocos de loja (calculadora de frete e página de rastreio) operam
+        sem persistência local de identificadores e sem compartilhamento de
+        dados com terceiros para fins de marketing.
+      </p>
+
       <h2>9. Direitos do titular dos dados</h2>
       <p>
         Sob a LGPD (Art. 18) e o GDPR, o titular dos dados pessoais pode exercer
@@ -366,15 +410,18 @@
       </p>
       <p>
         <strong>Para o lojista:</strong> as solicitações podem ser feitas
-        diretamente ao Encarregado de Dados (ver Seção 11) ou através do e-mail
-        de suporte do App.
+        diretamente ao Encarregado de Dados (ver Seção 12) ou através do e-mail
+        de suporte do App. Responderemos no prazo de até 15 (quinze) dias
+        contados do recebimento, conforme Art. 19 da LGPD, podendo solicitar
+        informações adicionais para confirmar a identidade do titular.
       </p>
       <p>
         <strong>Para o consumidor final:</strong> como o lojista é o controlador
         dos dados do consumidor, as solicitações devem ser encaminhadas primeiro
         ao próprio lojista. Mediante instrução do lojista (ou via Shopify
         Compliance Webhook), o Hub de Frete executa a operação solicitada (ex.:
-        exclusão dos registros de remessa relacionados).
+        exclusão dos registros de remessa relacionados) dentro dos prazos
+        técnicos da plataforma.
       </p>
 
       <h2>10. Decisões automatizadas</h2>
@@ -386,7 +433,37 @@
         não toma decisões com impacto legal sobre o consumidor.
       </p>
 
-      <h2>11. Encarregado de dados (DPO)</h2>
+      <h2>11. Notificação de incidentes de segurança</h2>
+      <p>
+        Em conformidade com o Art. 48 da LGPD, em caso de incidente de
+        segurança que possa acarretar risco ou dano relevante aos titulares dos
+        dados pessoais, comunicaremos a Autoridade Nacional de Proteção de
+        Dados (ANPD) e os titulares afetados em prazo razoável, contendo no
+        mínimo:
+      </p>
+      <ul>
+        <li>Descrição da natureza dos dados pessoais afetados.</li>
+        <li>
+          Informações sobre os titulares envolvidos, na medida do conhecido.
+        </li>
+        <li>
+          Indicação das medidas técnicas e de segurança utilizadas para
+          proteção dos dados.
+        </li>
+        <li>Riscos relacionados ao incidente.</li>
+        <li>
+          Motivos da demora, no caso de comunicação não imediata; e medidas
+          adotadas para reverter ou mitigar os efeitos do prejuízo.
+        </li>
+      </ul>
+      <p>
+        Quando o incidente envolver dados de consumidores finais (cujo
+        controlador é o lojista), comunicaremos o lojista no menor prazo
+        razoável para que ele possa cumprir suas próprias obrigações como
+        controlador.
+      </p>
+
+      <h2>12. Encarregado de dados (DPO)</h2>
       <p>
         Em conformidade com o Art. 41 da LGPD, designamos um Encarregado de
         Dados disponível para receber solicitações de titulares e comunicações
@@ -398,7 +475,7 @@
         <a href="mailto:contact@csatech.com.br">contact@csatech.com.br</a>
       </p>
 
-      <h2>12. Alterações nesta política</h2>
+      <h2>13. Alterações nesta política</h2>
       <p>
         Podemos atualizar esta Política de Privacidade periodicamente para
         refletir mudanças em nossas práticas, requisitos da Shopify ou razões
@@ -407,12 +484,12 @@
         instalados.
       </p>
 
-      <h2>13. Contato</h2>
+      <h2>14. Contato</h2>
       <p>
         Para dúvidas sobre esta política, exercício de direitos ou outras
         questões de privacidade, entre em contato pelo e-mail de suporte listado
         na página do aplicativo na Shopify App Store ou pelo e-mail do
-        Encarregado de Dados informado na Seção 11.
+        Encarregado de Dados informado na Seção 12.
       </p>
 
       <div class="footer">
